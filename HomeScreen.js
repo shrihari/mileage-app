@@ -23,17 +23,10 @@ import {
 const db = SQLite.openDatabase({ name: 'db.db' });
 
 class HomeScreen extends React.Component {
-  // static navigationOptions = {
-  //   title: '',
-  //   headerBackTitle: null,
-  //   headerStyle: {backgroundColor: 'white'}
-  // };
+
   static navigationOptions = {
     tabBarVisible: false,
   };
-  // static navigationOptions = ({ navigation, screenProps }) => ({
-  //   tabBarVisible: (typeof navigation.state.params === 'undefined') ? true : navigation.state.params.visible,
-  // });
 
   constructor(props) {
     super(props);
@@ -58,8 +51,6 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     let t = this
 
-    console.log(this.props.navigation);
-
     db.transaction(tx => {
       // tx.executeSql(
       //   'drop table events;'
@@ -70,8 +61,6 @@ class HomeScreen extends React.Component {
       // Find out last input type
       tx.executeSql('select * from events', [], (_, { rows }) => {
 
-        console.log("Last input", rows.item(rows.length-1))
-
         if(rows.length > 0) {
           t.setState({lastinput: rows.item(rows.length-1)})
         }
@@ -80,9 +69,7 @@ class HomeScreen extends React.Component {
 
       // Calculate average mileage
       tx.executeSql('select * from mileages', [], (_, { rows }) => {
-
         // console.log(rows)
-
         if(rows.length > 0) {
           let total = 0;
           for(let i = 0; i < rows.length; i++) {
@@ -351,13 +338,13 @@ class HomeScreen extends React.Component {
               (this.state.mode == 'refill') && {
                 height: refillAnim.interpolate({
                   inputRange: [0, 10],
-                  outputRange: [100, 0]
+                  outputRange: [120, 0]
                 })
               },
               (this.state.mode == 'lowfuel') && {
                 height: lowfuelAnim.interpolate({
                   inputRange: [0, 10],
-                  outputRange: [100, 0]
+                  outputRange: [120, 0]
                 })
               },
               ]}>
@@ -413,8 +400,7 @@ class HomeScreen extends React.Component {
                           inputRange: [0, 10],
                           outputRange: [1, 0]
                         }),
-                      }, 
-                      // (this.state.mode == 'lowfuel') && styles.hide
+                      },
                       ]}>
               <View style={[styles.button, styles.refillButton]}>
                 <Image source={require('./images/refill.png')} />
@@ -443,6 +429,7 @@ class HomeScreen extends React.Component {
             keyboardType="numeric"
             value={this.state.lowfuelinput}
           />
+          <Text style={{color: '#666', marginBottom: 30}}>KILOMETERS</Text>
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={this.cancelAdd}>
@@ -473,6 +460,7 @@ class HomeScreen extends React.Component {
             keyboardType="numeric"
             value={this.state.refillinput}
           />
+          <Text style={{color: '#666', marginBottom: 30}}>LITERS</Text>
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={this.cancelAdd}>
@@ -503,7 +491,7 @@ const styles = StyleSheet.create({
   },
   mileage: {
     // padding: 20,
-    height: 100,
+    height: 120,
     overflow: 'hidden',
     // marginTop: 44
   },
@@ -532,12 +520,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   button: {
     flex: 1,
     padding: 20,
-    margin: 10,
+    marginLeft: 10,
+    marginRight: 10,
     alignItems: 'center',
     borderRadius: 10,
     height: 100
@@ -577,12 +567,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEF5E8'
   },
   addRefillContainer: {
-    backgroundColor: '#F1F8ED'
+    backgroundColor: '#F1F8ED',
   },
   inputBox: {
     fontSize: 64,
     height: 72,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: 'center',
   },
   hide: {
