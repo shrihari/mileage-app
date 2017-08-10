@@ -7,7 +7,7 @@ import {
   Easing,
   FlatList,
   Image, 
-  ListView, 
+  ListView,
   ScrollView, 
   StyleSheet, 
   Text, 
@@ -30,15 +30,23 @@ class History extends React.Component {
     super(props);
 
     this.historyItem = this.historyItem.bind(this);
-
-    // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.updateData = this.updateData.bind(this);
   
     this.state = {
-      // dataSource: ds.cloneWithRows([]),
-      data: []
+      data: [],
+      refreshing: false
     };
 
+  }
+
+  componentDidMount() {
+    this.updateData()
+  }
+
+  updateData() {
     let t = this
+
+    t.setState({refreshing: true});
 
     db.transaction(tx => {
       tx.executeSql('select * from events order by id desc', [], (_, { rows }) => {
@@ -46,42 +54,15 @@ class History extends React.Component {
         console.log(rows)
 
         if(rows.length > 0) {
-          // t.setState({dataSource: ds.cloneWithRows(rows._array)})
-          // t.setState({dataSource: rows._array})
-          t.setState({data: rows._array})
+          t.setState({data: rows._array, refreshing: false})
         }
 
       });
     });
-  }
-  componentDidMount(){
-    // let t = this
 
-    // // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-    // db.transaction(tx => {
-    //   tx.executeSql('select * from events order by id desc', [], (_, { rows }) => {
-
-    //     console.log(rows)
-
-    //     if(rows.length > 0) {
-    //       // t.setState({dataSource: ds.cloneWithRows(rows._array)})
-    //       // t.setState({dataSource: rows._array})
-    //       t.setState({data: rows._array})
-    //     }
-
-    //   });
-    // });
   }
 
   historyItem({item}) {
-      // console.log(item);
-
-      // return (
-      //   <View style={styles.historyLowFuel}>
-      //     <Text style={styles.historyLowFuelText}>{item.value}</Text>
-      //   </View>
-      // )
 
     if(item.type == "lowfuel") {
       return (
@@ -116,13 +97,15 @@ class History extends React.Component {
             <Image source={require('./images/back.png')} />
           </View>
         </View>
-        <ScrollView style={styles.historyContainer}>
+        <View style={styles.historyContainer}>
           <FlatList
             data={this.state.data}
             renderItem={this.historyItem}
             keyExtractor={item => item.id}
+            onRefresh={this.updateData}
+            refreshing={this.state.refreshing}
           />
-        </ScrollView>
+        </View>
       </View>
     );
   }
