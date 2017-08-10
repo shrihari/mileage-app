@@ -67,12 +67,14 @@ class History extends React.Component {
     if(item.type == "lowfuel") {
       return (
         <View style={styles.historyLowFuel}>
+          <Image source={require('./images/lowfuel.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyLowFuelText}>{item.value}</Text>
         </View>
       )
     } else if(item.type == "refill") {
       return (
         <View style={styles.historyRefill}>
+          <Image source={require('./images/refill.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyRefillText}>{item.value}</Text>
         </View>
       )
@@ -210,27 +212,33 @@ const styles = StyleSheet.create({
   },
 
   historyLowFuel: {
-    height: 50,
+    height: 60,
     backgroundColor: '#FEF5E8',
     marginBottom: 1,
     paddingLeft: 20,
-    paddingRight: 10
+    paddingRight: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   historyLowFuelText: {
     lineHeight: 50,
     color: '#F5A623',
     fontWeight: 'bold',
+    marginLeft: 8,
   },
   historyRefill: {
-    height: 50,
+    height: 60,
     backgroundColor: '#F1F8ED',
     marginBottom: 1,
     paddingLeft: 20,
-    paddingRight: 10
+    paddingRight: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   historyRefillText: {
     lineHeight: 50,
     color: '#79B74E',
     fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
