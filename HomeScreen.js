@@ -36,6 +36,7 @@ class HomeScreen extends React.Component {
       refillinput: '',
       mode: 'mileage',
       lastinput: '',
+      lastlowfuel: {id: 0},
       mileage: 0,
       refillAnim: new Animated.Value(0),
       lowfuelAnim: new Animated.Value(0)
@@ -62,10 +63,19 @@ class HomeScreen extends React.Component {
       tx.executeSql('create table if not exists mileages (id integer primary key not null, value float);');
 
       // Find out last input type
-      tx.executeSql('select * from events', [], (_, { rows }) => {
+      tx.executeSql('select * from events order by id desc limit 1', [], (_, { rows }) => {
 
         if(rows.length > 0) {
           t.setState({lastinput: rows.item(rows.length-1)})
+        }
+
+      });
+
+      // Find out last low fuel entry. Will come in handy
+      tx.executeSql('select * from events where type = ? order by id desc limit 1', ["lowfuel"], (_, { rows }) => {
+
+        if(rows.length > 0) {
+          t.setState({lastlowfuel: rows.item(0)})
         }
 
       });
@@ -129,25 +139,38 @@ class HomeScreen extends React.Component {
 
       db.transaction(
         tx => {
-          tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId }) =>
-            t.setState({lastinput: {id: insertId, type: "lowfuel", value: val}})
-          );
-          tx.executeSql('select * from events where id > ?', [t.state.lastinput.id - 2], (_, { rows }) => {
-            console.log(t.state.lastinput.id - 2)
-            console.log(JSON.stringify(rows))
+          tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId, rows }) => {
+            t.setState({
+              lastinput: {id: insertId, type: "lowfuel", value: val},
+              lastlowfuel: {id: insertId, type: "lowfuel", value: val}
+            })
+          });
 
-            if(rows.length == 3) {
-              let mileage = (val - rows.item(0).value) / rows.item(1).value;
-              console.log(mileage)
+          tx.executeSql('select * from events where id >= ?', [t.state.lastlowfuel.id], (_, { rows }) => {
+
+            // console.log(rows)
+
+            if(rows.length > 2) {
+
+              let oldOdo = rows.item(0).value
+              let newOdo = rows.item(rows.length-1).value
+              let refills = rows.length - 2, totalVolume = 0;
+
+              while (refills > 0) {
+                totalVolume += rows.item(refills).value
+                refills -= 1
+              }
+
+              let mileage = (newOdo - oldOdo) / totalVolume
+
               tx.executeSql('insert into mileages (value) values (?)', [mileage], (_, {insertId}) => 
-
                 t.setState({mileage: (t.state.mileage * (insertId-1) + mileage) / insertId })
-
               );
 
             }
 
           });
+
         }
       );
     }
@@ -191,31 +214,14 @@ class HomeScreen extends React.Component {
 
     let val = parseFloat(t.state.refillinput);
 
-    if(t.state.lastinput.type == "refill") {
-    // 2 Refills in a row. Just add it to the last refill.
-
-      val += t.state.lastinput.value;
-
-      db.transaction(
-        tx => {
-          tx.executeSql('update events set value = ? where id = ? ', [val, t.state.lastinput.id], (_, { insertId }) =>
-            t.setState({lastinput: {id: t.state.lastinput.id, type: "refill", value: val}})
-          );
-        }
-      );
-
-    } else {
-    // Refill after a low fuel. Just insert and do nothing.
-
-      db.transaction(
-        tx => {
-          tx.executeSql('insert into events (type, value, date) values ("refill", ?, ?)', [val, Date()], (_, { insertId }) =>
-            t.setState({lastinput: {id: insertId, type: "refill", value: val}})
-          );
-        }
-      );
-
-    } 
+    // Insert into db
+    db.transaction(
+      tx => {
+        tx.executeSql('insert into events (type, value, date) values ("refill", ?, ?)', [val, Date()], (_, { insertId }) =>
+          t.setState({lastinput: {id: insertId, type: "refill", value: val}})
+        );
+      }
+    );
 
     this.refillInput.blur()
 
