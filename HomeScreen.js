@@ -11,7 +11,7 @@ import {
   ScrollView, 
   StyleSheet, 
   Text, 
-  TextInput, 
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback, 
   View } from 'react-native';
@@ -305,12 +305,14 @@ class HomeScreen extends React.Component {
                   },)
                 },
             ]}>
-            <TouchableWithoutFeedback onPress={() => navigate('Settings') }>
+            <TouchableOpacity onPress={() => navigate('Settings') } style={{padding: 20}}>
               <Image source={require('./images/settings.png')} />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Animated.View>
 
-          <Image source={require('./images/motorcycle.png')} />
+          <View style={{padding: 20}}>
+            <Image source={require('./images/motorcycle.png')} />
+          </View>
 
           <Animated.View 
             style={[
@@ -327,9 +329,9 @@ class HomeScreen extends React.Component {
                   },)
                 },
             ]}>
-            <TouchableWithoutFeedback onPress={() => navigate('History') }>
+            <TouchableOpacity onPress={() => navigate('History') } style={{padding: 20}}>
               <Image source={require('./images/history.png')} />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Animated.View>
         </View>
 
@@ -500,8 +502,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     // height: 50,
-    padding: 20,
-    marginBottom: 20
+    // padding: 20,
+    marginBottom: 20,
+    // backgroundColor: 'blue'
   },
 
   mileageLabel: {

@@ -94,13 +94,13 @@ class History extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableWithoutFeedback onPress={() => navigate('Home') }>
+          <TouchableOpacity onPress={() => navigate('Home') } style={{padding: 20}}>
             <Image source={require('./images/back.png')} />
-          </TouchableWithoutFeedback>
-          <View>
+          </TouchableOpacity>
+          <View style={{padding: 20}}>
             <Text style={{color: '#aaa'}}>HISTORY</Text>
           </View>
-          <View style={{opacity: 0}}>
+          <View style={{opacity: 0, padding: 20}}>
             <Image source={require('./images/back.png')} />
           </View>
         </View>
@@ -138,9 +138,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     // height: 50,
-    padding: 20,
+    // padding: 20,
   },
 
   mileageLabel: {
