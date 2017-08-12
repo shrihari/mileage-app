@@ -1,3 +1,4 @@
+import Expo from 'expo';
 import React from 'react';
 import { 
   Alert, 
@@ -16,9 +17,9 @@ import {
   View } from 'react-native';
   
 class Settings extends React.Component {
-  // static navigationOptions = {
-  //   tabBarVisible: false,
-  // };
+  static navigationOptions = {
+    tabBarVisible: false,
+  };
   constructor(props) {
     super(props);
 
@@ -29,12 +30,48 @@ class Settings extends React.Component {
   }
 
   render() {
+
+    const { navigate } = this.props.navigation;
+
     return (
-      <View>
-        <Text>Hello</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={{opacity: 0}}>
+            <Image source={require('./images/forward.png')} />
+          </View>
+          <View>
+            <Text style={{color: '#aaa'}}>SETTINGS</Text>
+          </View>
+          <TouchableWithoutFeedback onPress={() => navigate('Home') }>
+            <Image source={require('./images/forward.png')} />
+          </TouchableWithoutFeedback>
+        </View>
+        <View style={styles.settingsContainer}>
+
+        </View>
       </View>
     );
   }
 }
 
 export default Settings
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: Expo.Constants.statusBarHeight,
+  },
+
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    // height: 50,
+    padding: 20,
+  },
+
+  settingsContainer: {
+    flex: 1
+  },
+});
