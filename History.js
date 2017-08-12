@@ -64,11 +64,15 @@ class History extends React.Component {
 
   historyItem({item}) {
 
+    let date = new Date(item.date)
+    let formattedDate = date.getDate() + " " + date.toLocaleString("en-us", { month: "short" });
+
     if(item.type == "lowfuel") {
       return (
         <View style={styles.historyLowFuel}>
           <Image source={require('./images/lowfuel.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyLowFuelText}>{item.value}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
         </View>
       )
     } else if(item.type == "refill") {
@@ -76,6 +80,7 @@ class History extends React.Component {
         <View style={styles.historyRefill}>
           <Image source={require('./images/refill.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyRefillText}>{item.value}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
         </View>
       )
     }
@@ -211,6 +216,9 @@ const styles = StyleSheet.create({
     display: 'none'
   },
 
+  historyContainer: {
+    flex: 1
+  },
   historyLowFuel: {
     height: 60,
     backgroundColor: '#FEF5E8',
@@ -225,6 +233,7 @@ const styles = StyleSheet.create({
     color: '#F5A623',
     fontWeight: 'bold',
     marginLeft: 8,
+    flex: 1
   },
   historyRefill: {
     height: 60,
@@ -241,4 +250,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
+  date: {
+    opacity: .5,
+    textAlign: 'right',
+    paddingRight: 10,
+    flex: 1,
+  }
 });

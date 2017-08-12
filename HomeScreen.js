@@ -55,7 +55,10 @@ class HomeScreen extends React.Component {
       // tx.executeSql(
       //   'drop table events;'
       // );
-      tx.executeSql('create table if not exists events (id integer primary key not null, type text, value float);');
+      // tx.executeSql(
+      //   'drop table mileages;'
+      // );
+      tx.executeSql('create table if not exists events (id integer primary key not null, type text, value float, date);');
       tx.executeSql('create table if not exists mileages (id integer primary key not null, value float);');
 
       // Find out last input type
@@ -126,7 +129,7 @@ class HomeScreen extends React.Component {
 
       db.transaction(
         tx => {
-          tx.executeSql('insert into events (type, value) values ("lowfuel", ?)', [val], (_, { insertId }) =>
+          tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId }) =>
             t.setState({lastinput: {id: insertId, type: "lowfuel", value: val}})
           );
           tx.executeSql('select * from events where id > ?', [t.state.lastinput.id - 2], (_, { rows }) => {
@@ -206,7 +209,7 @@ class HomeScreen extends React.Component {
 
       db.transaction(
         tx => {
-          tx.executeSql('insert into events (type, value) values ("refill", ?)', [val], (_, { insertId }) =>
+          tx.executeSql('insert into events (type, value, date) values ("refill", ?, ?)', [val, Date()], (_, { insertId }) =>
             t.setState({lastinput: {id: insertId, type: "refill", value: val}})
           );
         }
@@ -272,7 +275,6 @@ class HomeScreen extends React.Component {
       <Animated.ScrollView 
           keyboardShouldPersistTaps='handled'
           style={[styles.container, 
-                  // (this.state.mode == 'lowfuel') && styles.addLowFuelContainer,
                   (this.state.mode == 'refill') && {
                     backgroundColor: refillAnim.interpolate({
                       inputRange: [0, 10],
@@ -285,7 +287,6 @@ class HomeScreen extends React.Component {
                       outputRange: ['#ffffff', '#FEF5E8']
                     }),
                   },
-                  // (this.state.mode == 'refill') && styles.addRefillContainer,
                   ]}>
 
         <View style={styles.header}>
@@ -370,7 +371,6 @@ class HomeScreen extends React.Component {
                           outputRange: [1, 0]
                         }),
                       }, 
-                      // (this.state.mode == 'refill') && styles.hide
                       ]}>
               <View style={[
                   styles.button, 
