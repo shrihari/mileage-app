@@ -132,7 +132,7 @@ class HomeScreen extends React.Component {
 
     if (val <= t.state.lastlowfuel.value) {
       t.setState({
-        lowfuelvalidation: "You cannot travel back in time, dear",
+        lowfuelvalidation: "You've already travelled " + t.state.lastlowfuel.value + " Kilometers",
       })
       return;
     }
