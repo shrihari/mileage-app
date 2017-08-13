@@ -37,6 +37,7 @@ class HomeScreen extends React.Component {
       mode: 'mileage',
       lastinput: '',
       lastlowfuel: {id: 0},
+      lowfuelvalidation: null, 
       mileage: 0,
       refillAnim: new Animated.Value(0),
       lowfuelAnim: new Animated.Value(0)
@@ -129,7 +130,12 @@ class HomeScreen extends React.Component {
 
     let val = parseFloat(t.state.lowfuelinput);
 
-    // console.log(val)
+    if (val <= t.state.lastlowfuel.value) {
+      t.setState({
+        lowfuelvalidation: "You cannot travel back in time, dear",
+      })
+      return;
+    }
 
     if(t.state.lastinput.type == "lowfuel") {
     // Low fuel after a low fuel. Don't allow.
@@ -142,7 +148,8 @@ class HomeScreen extends React.Component {
           tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId, rows }) => {
             t.setState({
               lastinput: {id: insertId, type: "lowfuel", value: val},
-              lastlowfuel: {id: insertId, type: "lowfuel", value: val}
+              lastlowfuel: {id: insertId, type: "lowfuel", value: val},
+              lowfuelvalidation: null
             })
           });
 
@@ -267,7 +274,7 @@ class HomeScreen extends React.Component {
         }
       ).start(() => {
         this.setState({refillinput: '', lowfuelinput: ''});
-        this.setState({mode: 'mileage'})
+        this.setState({mode: 'mileage', lowfuelvalidation: null})
       }); 
 
     }
@@ -429,6 +436,12 @@ class HomeScreen extends React.Component {
               })
             }
             ]}>
+          <Text 
+            style={[
+              {color: 'red'},
+              (this.state.lowfuelvalidation == null) && styles.hide,
+              ]}
+            >{this.state.lowfuelvalidation}</Text>
           <TextInput
             ref={(input) => { this.lowFuelInput = input; }} 
             style={[styles.inputBox, styles.lowFuelText, {fontWeight: '300'}]}
