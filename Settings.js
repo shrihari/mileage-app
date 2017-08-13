@@ -3,6 +3,7 @@ import React from 'react';
 import { 
   Alert, 
   Animated, 
+  AsyncStorage,
   Button, 
   Easing,
   FlatList,
@@ -23,10 +24,23 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      units: this.props.screenProps.units
+    }
 
+    this.setMetric = this.setMetric.bind(this);
+    this.setImperial = this.setImperial.bind(this);
   }
-  componentDidMount(){
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({units: nextProps.screenProps.units})
+  }
+
+  async setMetric() {
+    this.props.screenProps.setUnits("metric")
+  }
+  async setImperial() {
+    this.props.screenProps.setUnits("imperial")
   }
 
   render() {
@@ -46,9 +60,37 @@ class Settings extends React.Component {
             <Image source={require('./images/forward.png')} />
           </TouchableOpacity>
         </View>
-        <View style={styles.settingsContainer}>
+        <ScrollView style={styles.settingsContainer}>
 
-        </View>
+          <View style={{padding: 20}}>
+            <Text style={{color: '#aaa'}}>UNITS</Text>
+          </View>
+
+          <View style={[styles.buttons]}>
+            <TouchableWithoutFeedback onPress={this.setMetric}>
+                <View style={[
+                    styles.button, 
+                    (this.state.units == "metric") && styles.selected,
+                    ]}>
+                  <Text style={[{color: '#666', fontSize: 12}]}>KILOMETERS</Text>
+                  <Text style={[{color: '#666', fontSize: 20, fontWeight: '200'}]}>&amp;</Text>
+                  <Text style={[{color: '#666', fontSize: 12}]}>LITERS</Text>
+                </View>
+            </TouchableWithoutFeedback>
+            
+            <TouchableWithoutFeedback onPress={this.setImperial}>
+                <View style={[
+                    styles.button, 
+                    (this.state.units == "imperial") && styles.selected,
+                    ]}>
+                  <Text style={[{color: '#666', fontSize: 12}]}>MILES</Text>
+                  <Text style={[{color: '#666', fontSize: 20, fontWeight: '200'}]}>&amp;</Text>
+                  <Text style={[{color: '#666', fontSize: 12}]}>GALLONS</Text>
+                </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+        </ScrollView>
       </View>
     );
   }
@@ -74,4 +116,27 @@ const styles = StyleSheet.create({
   settingsContainer: {
     flex: 1
   },
+
+  buttons: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  button: {
+    flex: 1,
+    padding: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    borderColor: '#eee',
+    borderWidth: 1
+  },
+  selected: {
+    backgroundColor: '#eee',
+    borderColor: '#ddd',
+  }
 });

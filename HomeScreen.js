@@ -3,6 +3,7 @@ import React from 'react';
 import { 
   Alert, 
   Animated, 
+  AsyncStorage,
   Button, 
   Easing,
   FlatList,
@@ -39,6 +40,7 @@ class HomeScreen extends React.Component {
       lastlowfuel: {id: 0},
       lowfuelvalidation: null, 
       mileage: 0,
+      units: this.props.screenProps.units,
       refillAnim: new Animated.Value(0),
       lowfuelAnim: new Animated.Value(0)
     };
@@ -48,6 +50,10 @@ class HomeScreen extends React.Component {
     this.newRefill = this.newRefill.bind(this);
     this.addRefill = this.addRefill.bind(this);
     this.cancelAdd = this.cancelAdd.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({units: nextProps.screenProps.units})
   }
 
   componentDidMount() {
@@ -354,18 +360,22 @@ class HomeScreen extends React.Component {
               (this.state.mode == 'refill') && {
                 height: refillAnim.interpolate({
                   inputRange: [0, 10],
-                  outputRange: [120, 0]
+                  outputRange: [140, 0]
                 })
               },
               (this.state.mode == 'lowfuel') && {
                 height: lowfuelAnim.interpolate({
                   inputRange: [0, 10],
-                  outputRange: [120, 0]
+                  outputRange: [140, 0]
                 })
               },
               ]}>
           <Text style={styles.mileageLabel}>MILEAGE</Text>
           <Text style={styles.mileageValue}>{Math.round(this.state.mileage * 100) / 100}</Text>
+          <Text style={{color: '#aaa', textAlign: 'center'}}>
+            {(this.state.units == "metric" && "KILOMETERS PER LITER") ||
+              (this.state.units == "imperial" && "MILES PER GALLON")}
+          </Text>
         </Animated.View>
 
         <View style={styles.buttons}>
@@ -450,7 +460,10 @@ class HomeScreen extends React.Component {
             keyboardType="numeric"
             value={this.state.lowfuelinput}
           />
-          <Text style={{color: '#666', marginBottom: 30}}>KILOMETERS</Text>
+          <Text style={{color: '#666', marginBottom: 30}}>
+            {(this.state.units == "metric" && "KILOMETERS") ||
+              (this.state.units == "imperial" && "MILES")}
+          </Text>
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={this.cancelAdd}>
@@ -481,7 +494,10 @@ class HomeScreen extends React.Component {
             keyboardType="numeric"
             value={this.state.refillinput}
           />
-          <Text style={{color: '#666', marginBottom: 30}}>LITERS</Text>
+          <Text style={{color: '#666', marginBottom: 30}}>
+            {(this.state.units == "metric" && "LITERS") ||
+              (this.state.units == "imperial" && "GALLONS")}
+          </Text>
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={this.cancelAdd}>
@@ -512,8 +528,9 @@ const styles = StyleSheet.create({
   },
   mileage: {
     // padding: 20,
-    height: 120,
+    height: 140,
     overflow: 'hidden',
+    // marginBottom: 10
     // marginTop: 44
   },
 

@@ -34,9 +34,14 @@ class History extends React.Component {
   
     this.state = {
       data: [],
-      refreshing: false
+      refreshing: false,
+      units: this.props.screenProps.units
     };
 
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({units: nextProps.screenProps.units})
   }
 
   componentDidMount() {
@@ -72,6 +77,10 @@ class History extends React.Component {
         <View style={styles.historyLowFuel}>
           <Image source={require('./images/lowfuel.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyLowFuelText}>{item.value}</Text>
+          <Text style={styles.historyLowFuelUnits}>
+            {(this.state.units == "metric" && "Km") ||
+              (this.state.units == "imperial" && "mi")}
+          </Text>
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
       )
@@ -80,6 +89,10 @@ class History extends React.Component {
         <View style={styles.historyRefill}>
           <Image source={require('./images/refill.png')} style={{width: 18}} resizeMode='contain' />
           <Text style={styles.historyRefillText}>{item.value}</Text>
+          <Text style={styles.historyRefillUnits}>
+            {(this.state.units == "metric" && "liters") ||
+              (this.state.units == "imperial" && "gallons")}
+          </Text>
           <Text style={styles.date}>{formattedDate}</Text>
         </View>
       )
@@ -233,8 +246,16 @@ const styles = StyleSheet.create({
     color: '#F5A623',
     fontWeight: 'bold',
     marginLeft: 8,
-    flex: 1
+    flex: 0
   },
+  historyLowFuelUnits: {
+    lineHeight: 50,
+    color: '#F5A623',
+    fontWeight: '200',
+    marginLeft: 4,
+    flex: 0
+  },
+
   historyRefill: {
     height: 60,
     backgroundColor: '#F1F8ED',
@@ -249,7 +270,16 @@ const styles = StyleSheet.create({
     color: '#79B74E',
     fontWeight: 'bold',
     marginLeft: 8,
+    flex: 0,
   },
+  historyRefillUnits: {
+    lineHeight: 50,
+    color: '#79B74E',
+    fontWeight: '200',
+    marginLeft: 4,
+    flex: 0,
+  },
+
   date: {
     opacity: .5,
     textAlign: 'right',
