@@ -73,7 +73,7 @@ class HomeScreen extends React.Component {
       tx.executeSql('select * from events order by id desc limit 1', [], (_, { rows }) => {
 
         if(rows.length > 0) {
-          t.setState({lastinput: rows.item(rows.length-1)})
+          t.setState({lastinput: rows.item(0)})
         }
 
       });
@@ -143,50 +143,47 @@ class HomeScreen extends React.Component {
       return;
     }
 
-    if(t.state.lastinput.type == "lowfuel") {
-    // Low fuel after a low fuel. Don't allow.
 
-    } else {
     // Low fuel after a refill. Calculate and insert mileage. Update average mileage.
 
-      db.transaction(
-        tx => {
-          tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId, rows }) => {
-            t.setState({
-              lastinput: {id: insertId, type: "lowfuel", value: val},
-              lastlowfuel: {id: insertId, type: "lowfuel", value: val},
-              lowfuelvalidation: null
-            })
-          });
+    db.transaction(
+      tx => {
+        tx.executeSql('insert into events (type, value, date) values ("lowfuel", ?, ?)', [val, Date()], (_, { insertId, rows }) => {
+          t.setState({
+            lastinput: {id: insertId, type: "lowfuel", value: val},
+            lastlowfuel: {id: insertId, type: "lowfuel", value: val},
+            lowfuelvalidation: null
+          })
+        });
 
-          tx.executeSql('select * from events where id >= ?', [t.state.lastlowfuel.id], (_, { rows }) => {
+        tx.executeSql('select * from events where id >= ?', [t.state.lastlowfuel.id], (_, { rows }) => {
 
-            // console.log(rows)
+          // console.log(rows)
 
-            if(rows.length > 2) {
+          if(rows.length > 2) {
 
-              let oldOdo = rows.item(0).value
-              let newOdo = rows.item(rows.length-1).value
-              let refills = rows.length - 2, totalVolume = 0;
+            let oldOdo = rows.item(0).value
+            let newOdo = rows.item(rows.length-1).value
+            let refills = rows.length - 2, totalVolume = 0;
 
-              while (refills > 0) {
-                totalVolume += rows.item(refills).value
-                refills -= 1
-              }
-
-              let mileage = (newOdo - oldOdo) / totalVolume
-
-              tx.executeSql('insert into mileages (value) values (?)', [mileage], (_, {insertId}) => 
-                t.setState({mileage: (t.state.mileage * (insertId-1) + mileage) / insertId })
-              );
-
+            while (refills > 0) {
+              totalVolume += rows.item(refills).value
+              refills -= 1
             }
 
-          });
+            let mileage = (newOdo - oldOdo) / totalVolume
 
-        }
-      );
-    }
+            tx.executeSql('insert into mileages (value) values (?)', [mileage], (_, {insertId}) => 
+              t.setState({mileage: (t.state.mileage * (insertId-1) + mileage) / insertId })
+            );
+
+          }
+
+        });
+
+      }
+    );
+  
 
     this.lowFuelInput.blur()
 
@@ -501,11 +498,11 @@ class HomeScreen extends React.Component {
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={this.cancelAdd}>
-               <Image source={require('./images/cancel.png')} style={{opacity: 0.5, marginRight: 20}} />
+               <Image source={require('./images/cancel.png')} style={{opacity: 0.5, marginRight: 10}} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={this.addRefill}>
-               <Image source={require('./images/addRefill.png')} />
+               <Image source={require('./images/addRefill.png')} style={{marginLeft: 10}} />
             </TouchableOpacity>
           </View>
 

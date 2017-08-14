@@ -42,7 +42,6 @@ class History extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({units: nextProps.screenProps.units})
-    // this.forceUpdate()
   }
 
   componentDidMount() {
