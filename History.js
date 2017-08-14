@@ -42,6 +42,7 @@ class History extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({units: nextProps.screenProps.units})
+    // this.forceUpdate()
   }
 
   componentDidMount() {
@@ -141,12 +142,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: Expo.Constants.statusBarHeight,
   },
-  mileage: {
-    // padding: 20,
-    height: 100,
-    overflow: 'hidden',
-    marginTop: 44
-  },
 
   header: {
     flexDirection: 'row',
@@ -154,79 +149,6 @@ const styles = StyleSheet.create({
     // alignItems: 'flex-start',
     // height: 50,
     // padding: 20,
-  },
-
-  mileageLabel: {
-    color: '#aaaaaa',
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: '200',
-  },
-  mileageValue: {
-    color: '#444',
-    textAlign: 'center',
-    fontSize: 48,
-    fontWeight: '300'
-  },
-  buttons: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    padding: 10,
-  },
-  button: {
-    flex: 1,
-    padding: 20,
-    margin: 10,
-    alignItems: 'center',
-    borderRadius: 10,
-    height: 100
-  },
-  lowFuelButton: {
-    backgroundColor: '#FEF5E8',
-  },
-  refillButton: {
-    backgroundColor: '#F1F8ED',
-  },
-  lowFuelText: {
-    color: '#F5A623',
-    marginTop: 10
-  },
-  refillText: {
-    color: '#79B74E',
-    marginTop: 10
-  },
-  addLowFuelButton: {
-    color: 'white',
-    backgroundColor: '#F5A623',
-    fontWeight: 'bold',
-    padding: 10,
-    width: 100,
-    textAlign: 'center',
-    borderRadius: 10
-  },
-  todoItem: {
-    color: '#79B74E',
-    height: 50,
-    backgroundColor: '#FEF5E8',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eeeeee',
-    padding: 10
-  },
-  addLowFuelContainer: {
-    backgroundColor: '#FEF5E8'
-  },
-  addRefillContainer: {
-    backgroundColor: '#F1F8ED'
-  },
-  inputBox: {
-    fontSize: 64,
-    height: 72,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  hide: {
-    display: 'none'
   },
 
   historyContainer: {
@@ -251,7 +173,6 @@ const styles = StyleSheet.create({
   historyLowFuelUnits: {
     lineHeight: 50,
     color: '#F5A623',
-    fontWeight: '200',
     marginLeft: 4,
     flex: 0
   },
@@ -275,7 +196,6 @@ const styles = StyleSheet.create({
   historyRefillUnits: {
     lineHeight: 50,
     color: '#79B74E',
-    fontWeight: '200',
     marginLeft: 4,
     flex: 0,
   },

@@ -526,14 +526,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: Expo.Constants.statusBarHeight,
   },
-  mileage: {
-    // padding: 20,
-    height: 140,
-    overflow: 'hidden',
-    // marginBottom: 10
-    // marginTop: 44
-  },
-
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -542,7 +534,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     // backgroundColor: 'blue'
   },
-
+  mileage: {
+    // padding: 20,
+    height: 140,
+    overflow: 'hidden',
+    // marginBottom: 10
+    // marginTop: 44
+  },
   mileageLabel: {
     color: '#aaaaaa',
     textAlign: 'center',
@@ -585,29 +583,7 @@ const styles = StyleSheet.create({
     color: '#79B74E',
     marginTop: 10
   },
-  addLowFuelButton: {
-    color: 'white',
-    backgroundColor: '#F5A623',
-    fontWeight: 'bold',
-    padding: 10,
-    width: 100,
-    textAlign: 'center',
-    borderRadius: 10
-  },
-  todoItem: {
-    color: '#79B74E',
-    height: 50,
-    backgroundColor: '#FEF5E8',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eeeeee',
-    padding: 10
-  },
-  addLowFuelContainer: {
-    backgroundColor: '#FEF5E8'
-  },
-  addRefillContainer: {
-    backgroundColor: '#F1F8ED',
-  },
+
   inputBox: {
     fontSize: 64,
     height: 72,
@@ -621,28 +597,4 @@ const styles = StyleSheet.create({
     opacity: .4
   },
 
-  historyLowFuel: {
-    height: 50,
-    backgroundColor: '#FEF5E8',
-    marginBottom: 1,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  historyLowFuelText: {
-    lineHeight: 50,
-    color: '#F5A623',
-    fontWeight: 'bold',
-  },
-  historyRefill: {
-    height: 50,
-    backgroundColor: '#F1F8ED',
-    marginBottom: 1,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  historyRefillText: {
-    lineHeight: 50,
-    color: '#79B74E',
-    fontWeight: 'bold',
-  },
 });
