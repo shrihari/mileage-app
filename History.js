@@ -59,9 +59,10 @@ class History extends React.Component {
         console.log(rows)
 
         if(rows.length > 0) {
-          t.setState({data: rows._array, refreshing: false})
+          t.setState({data: rows._array})
         }
 
+        t.setState({refreshing: false})
       });
     });
 
@@ -118,13 +119,19 @@ class History extends React.Component {
           </View>
         </View>
         <View style={styles.historyContainer}>
-          <FlatList
-            data={this.state.data}
-            renderItem={this.historyItem}
-            keyExtractor={item => item.id}
-            onRefresh={this.updateData}
-            refreshing={this.state.refreshing}
-          />
+          {(this.state.data.length == 0) && 
+            <View style={{padding: 50}}>
+              <Text style={{color: '#aaa', textAlign: 'center'}}>You will ride eternal, shiny and chrome!</Text>
+            </View>
+          }
+            <FlatList
+              data={this.state.data}
+              extraData={this.state}
+              renderItem={this.historyItem}
+              keyExtractor={item => item.id}
+              onRefresh={this.updateData}
+              refreshing={this.state.refreshing}
+            />
         </View>
       </View>
     );
@@ -132,8 +139,6 @@ class History extends React.Component {
 }
 
 export default History
-
-
 
 const styles = StyleSheet.create({
   container: {
