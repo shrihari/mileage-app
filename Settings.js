@@ -108,9 +108,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // alignItems: 'flex-start',
-    // height: 50,
-    // padding: 20,
   },
 
   settingsContainer: {

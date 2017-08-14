@@ -1,4 +1,3 @@
-import Expo, { SQLite } from 'expo';
 import React from 'react';
 import { 
   Alert, 
@@ -25,8 +24,6 @@ import HomeScreen from './HomeScreen.js';
 import History from './History.js';
 import Settings from './Settings.js';
 
-const db = SQLite.openDatabase({ name: 'db.db' });
-
 const App = TabNavigator({
   Settings: { screen: Settings },
   Home: { screen: HomeScreen },
@@ -36,13 +33,6 @@ const App = TabNavigator({
   swipeEnabled: true,
   animationEnabled: true,
   initialRouteName: 'Home',
-  tabBarOptions: {
-    activeTintColor: '#e91e63',
-    style: {
-      backgroundColor: '#ffffff',
-      height: 60,
-    },
-  },
 });
 
 class AppNew extends React.Component {

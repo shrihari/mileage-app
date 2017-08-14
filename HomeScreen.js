@@ -143,7 +143,6 @@ class HomeScreen extends React.Component {
       return;
     }
 
-
     // Low fuel after a refill. Calculate and insert mileage. Update average mileage.
 
     db.transaction(
@@ -183,7 +182,6 @@ class HomeScreen extends React.Component {
 
       }
     );
-  
 
     this.lowFuelInput.blur()
 
@@ -194,8 +192,7 @@ class HomeScreen extends React.Component {
         duration: 300,
       }
     ).start(() => {
-      this.setState({refillinput: '', lowfuelinput: ''});
-      this.setState({mode: 'mileage'})
+      this.setState({refillinput: '', lowfuelinput: '', mode: 'mileage'});
     }); 
   }
 
@@ -242,8 +239,7 @@ class HomeScreen extends React.Component {
         duration: 300,
       }
     ).start(() => {
-      this.setState({refillinput: '', lowfuelinput: ''});
-      this.setState({mode: 'mileage'})
+      this.setState({refillinput: '', lowfuelinput: '', mode: 'mileage'});
     }); 
   }
 
@@ -261,8 +257,7 @@ class HomeScreen extends React.Component {
           duration: 300,
         }
       ).start(() => {
-        this.setState({refillinput: '', lowfuelinput: ''});
-        this.setState({mode: 'mileage'})
+        this.setState({refillinput: '', lowfuelinput: '', mode: 'mileage'});
       }); 
 
     } else if(this.state.mode == "lowfuel") {
@@ -276,8 +271,7 @@ class HomeScreen extends React.Component {
           duration: 300,
         }
       ).start(() => {
-        this.setState({refillinput: '', lowfuelinput: ''});
-        this.setState({mode: 'mileage', lowfuelvalidation: null})
+        this.setState({refillinput: '', lowfuelinput: '', mode: 'mileage', lowfuelvalidation: null});
       }); 
 
     }
@@ -526,17 +520,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // height: 50,
-    // padding: 20,
     marginBottom: 20,
-    // backgroundColor: 'blue'
   },
   mileage: {
-    // padding: 20,
     height: 140,
     overflow: 'hidden',
-    // marginBottom: 10
-    // marginTop: 44
   },
   mileageLabel: {
     color: '#aaaaaa',
