@@ -50,6 +50,7 @@ class HomeScreen extends React.Component {
     this.newRefill = this.newRefill.bind(this);
     this.addRefill = this.addRefill.bind(this);
     this.cancelAdd = this.cancelAdd.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +60,8 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     let t = this
 
+    // t.clear();
+    
     db.transaction(tx => {
       // tx.executeSql(
       //   'drop table events;'
@@ -102,6 +105,19 @@ class HomeScreen extends React.Component {
     });
   }
 
+  async clear() {
+
+    db.transaction(tx => {
+      tx.executeSql(
+        'drop table events;'
+      );
+      tx.executeSql(
+        'drop table mileages;'
+      );
+    })
+    await AsyncStorage.removeItem('mileageUnits')
+
+  }
   // Get input for New Low Fuel
   newLowFuel() {
 
@@ -450,6 +466,7 @@ class HomeScreen extends React.Component {
             onChangeText={(text) => this.setState({lowfuelinput: text})}
             keyboardType="numeric"
             value={this.state.lowfuelinput}
+            underlineColorAndroid='transparent'
           />
           <Text style={{color: '#666', marginBottom: 30}}>
             {(this.state.units == "metric" && "KILOMETERS") ||
@@ -484,6 +501,7 @@ class HomeScreen extends React.Component {
             onChangeText={(text) => this.setState({refillinput: text})}
             keyboardType="numeric"
             value={this.state.refillinput}
+            underlineColorAndroid='transparent'
           />
           <Text style={{color: '#666', marginBottom: 30}}>
             {(this.state.units == "metric" && "LITERS") ||
@@ -572,6 +590,7 @@ const styles = StyleSheet.create({
   inputBox: {
     fontSize: 64,
     height: 72,
+    width: '100%',
     marginBottom: 10,
     textAlign: 'center',
   },

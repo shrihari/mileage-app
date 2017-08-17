@@ -31,6 +31,7 @@ class History extends React.Component {
 
     this.historyItem = this.historyItem.bind(this);
     this.updateData = this.updateData.bind(this);
+    this.monthName = this.monthName.bind(this);
   
     this.state = {
       data: [],
@@ -46,6 +47,11 @@ class History extends React.Component {
 
   componentDidMount() {
     this.updateData()
+  }
+
+  monthName(dt) {
+    let mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[dt.getMonth()];
   }
 
   updateData() {
@@ -71,7 +77,7 @@ class History extends React.Component {
   historyItem({item}) {
 
     let date = new Date(item.date)
-    let formattedDate = date.getDate() + " " + date.toLocaleString("en-us", { month: "short" });
+    let formattedDate = date.getDate() + " " + this.monthName(date);
 
     if(item.type == "lowfuel") {
       return (
@@ -165,14 +171,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   historyLowFuelText: {
-    lineHeight: 50,
     color: '#F5A623',
     fontWeight: 'bold',
     marginLeft: 8,
     flex: 0
   },
   historyLowFuelUnits: {
-    lineHeight: 50,
     color: '#F5A623',
     marginLeft: 4,
     flex: 0
@@ -188,14 +192,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   historyRefillText: {
-    lineHeight: 50,
     color: '#79B74E',
     fontWeight: 'bold',
     marginLeft: 8,
     flex: 0,
   },
   historyRefillUnits: {
-    lineHeight: 50,
     color: '#79B74E',
     marginLeft: 4,
     flex: 0,
